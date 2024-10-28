@@ -18,9 +18,9 @@ app.config['MYSQL_DB'] = os.getenv('AZURE_MYSQL_DATABASE')
 app.config['MYSQL_PORT'] = int(os.getenv('AZURE_MYSQL_PORT'))
 app.config['MYSQL_SSL_CA'] = "./DigiCertGlobalRootCA.crt.pem"
 
-app = Flask(__name__)
 
 mysql = MySQL(app)
+
 
 # Routes
 @app.route('/currentDate', methods=['GET'])
@@ -106,6 +106,7 @@ def connect():
         results = cur.fetchall()
         return jsonify(results), 200
     except Exception as e:
+        print(app.config)
         print(f"Error: {e}")
         return "Error connecting to database", 500
 
