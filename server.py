@@ -16,7 +16,7 @@ app.config['MYSQL_USER'] = os.getenv('AZURE_MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.getenv('AZURE_MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.getenv('AZURE_MYSQL_DATABASE')
 app.config['MYSQL_PORT'] = int(os.getenv('AZURE_MYSQL_PORT'))
-app.config['MYSQL_SSL_CA'] = "./DigiCertGlobalRootCA.crt.pem"
+
 
 mysql = MySQL(app)
 
