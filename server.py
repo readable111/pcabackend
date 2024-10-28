@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-import mysql.connector
+from flask_mysqldb import MySQL
 import os
 import datetime
 import ssl
@@ -11,12 +11,14 @@ load_dotenv()
 app = Flask(__name__)
 
 # MySQL configuration
-host= os.getenv('AZURE_MYSQL_HOST')
-user = os.getenv('AZURE_MYSQL_USER')
-password = os.getenv('AZURE_MYSQL_PASSWORD')
-database = os.getenv('AZURE_MYSQL_DATABASE')
+app.config['MYSQL_HOST'] = os.getenv('AZURE_MYSQL_HOST')
+app.config['MYSQL_USER'] = os.getenv('AZURE_MYSQL_USER')
+app.config['MYSQL_PASSWORD'] = os.getenv('AZURE_MYSQL_PASSWORD')
+app.config['MYSQL_DB'] = os.getenv('AZURE_MYSQL_DATABASE')
+app.config['MYSQL_PORT'] = int(os.getenv('AZURE_MYSQL_PORT'))
+app.config['MYSQL_SSL_CA'] = "./DigiCertGlobalRootCA.crt.pem"
 
-cnx  = mysql.connector.connect(user=user, password=password, host=host, database=database)
+mysql = MySQL(app)
 
 # Routes
 @app.route('/currentDate', methods=['GET'])
@@ -24,12 +26,12 @@ def get_current_date():
     date = datetime.datetime.now()
     return jsonify(date=date.isoformat()), 200
 
-@app.route('/editprofile', methods=['GET'])
+@app.route('/editprofile/', methods=['GET'])
 def edit_profile(subID):
     try:
-        cur=cnx.cursor()
+        cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM tbl_subscribers")
-        result = cur.fetchall()
+        result = cur.fetchone()
         if result:
             return jsonify(result), 200
         else:
