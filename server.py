@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from dotenv import load_dotenv
 import mysql.connector
 import os
@@ -20,7 +20,6 @@ def get_db_connection():
             port=int(os.getenv('AZURE_MYSQL_PORT')),
             ssl_ca="./DigiCertGlobalRootCA.crt.pem",  # Path to the SSL certificate
             ssl_verify_cert=True,
-            auth_plugin='mysql_native_password',
         )
         return conn
     except mysql.connector.Error as err:
