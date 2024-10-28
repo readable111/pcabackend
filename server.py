@@ -30,7 +30,7 @@ def get_current_date():
 def edit_profile(subID):
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM tbl_subscribers WHERE fld_s_SubscriberID_pk = %s", (subID,))
+        cur.execute("SELECT * FROM tbl_subscribers")
         result = cur.fetchone()
         if result:
             return jsonify(result), 200
