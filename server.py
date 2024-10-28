@@ -26,12 +26,12 @@ def get_current_date():
     date = datetime.datetime.now()
     return jsonify(date=date.isoformat()), 200
 
-@app.route('/editprofile/<int:subID>', methods=['GET'])
+@app.route('/editprofile', methods=['GET'])
 def edit_profile(subID):
     try:
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM tbl_subscribers")
-        result = cur.fetchone()
+        result = cur.fetchall()
         if result:
             return jsonify(result), 200
         else:
