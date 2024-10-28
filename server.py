@@ -27,7 +27,7 @@ def get_db_connection():
         return None
 
 # Routes
-@app.route('/currentDate', methods=['GET'])
+@app.route('/currentDate/', methods=['GET'])
 def get_current_date():
     date = datetime.datetime.now()
     return jsonify(date=date.isoformat()), 200
@@ -66,12 +66,12 @@ def home(id):
         print(f"Error: {e}")
         return "Error retrieving data", 500
 
-@app.route('/cropspage/<int:id>', methods=['GET'])
-def crops_page(id):
+@app.route('/cropspage/<string:subID>/cropID', methods=['GET'])
+def crops_page(subID, cropID):
     
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (id,))
+        cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s AND fld_c_CropID_pk = %s", (subID, cropID))
         results = cur.fetchall()
         if results:
             return jsonify(results), 200
