@@ -20,6 +20,8 @@ app.config['MYSQL_SSL_CA'] = "./DigiCertGlobalRootCA.crt.pem"
 
 app = Flask(__name__)
 
+mysql = MySQL(app)
+
 # Routes
 @app.route('/currentDate', methods=['GET'])
 def get_current_date():
