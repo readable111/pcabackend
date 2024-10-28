@@ -1,27 +1,31 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv
-from flask_mysqldb import MySQL
+import mysql.connector
 import os
 import datetime
-import ssl
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 
-
-# MySQL configuration
-app.config['MYSQL_HOST'] = os.getenv('AZURE_MYSQL_HOST')
-app.config['MYSQL_USER'] = os.getenv('AZURE_MYSQL_USER')
-app.config['MYSQL_PASSWORD'] = os.getenv('AZURE_MYSQL_PASSWORD')
-app.config['MYSQL_DB'] = os.getenv('AZURE_MYSQL_DATABASE')
-app.config['MYSQL_PORT'] = int(os.getenv('AZURE_MYSQL_PORT'))
-app.config['MYSQL_SSL_CA'] = "./DigiCertGlobalRootCA.crt.pem"
-
-
-mysql = MySQL(app)
-
+# Database connection function with SSL
+def get_db_connection():
+    try:
+        conn = mysql.connector.connect(
+            host=os.getenv('AZURE_MYSQL_HOST'),
+            user=os.getenv('AZURE_MYSQL_USER'),
+            password=os.getenv('AZURE_MYSQL_PASSWORD'),
+            database=os.getenv('AZURE_MYSQL_DATABASE'),
+            port=int(os.getenv('AZURE_MYSQL_PORT')),
+            ssl_ca="./DigiCertGlobalRootCA.crt.pem",  # Path to the SSL certificate
+            ssl_verify_cert=True,
+            auth_plugin='mysql_native_password',
+        )
+        return conn
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
 
 # Routes
 @app.route('/currentDate', methods=['GET'])
@@ -31,8 +35,11 @@ def get_current_date():
 
 @app.route('/editprofile', methods=['GET'])
 def edit_profile(subID):
+    conn = get_db_connection()
+    if conn is None:
+        return "Database connection error"
     try:
-        cur = mysql.connection.cursor()
+        cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_subscribers")
         result = cur.fetchone()
         if result:
@@ -45,8 +52,11 @@ def edit_profile(subID):
 
 @app.route('/home/<int:id>', methods=['GET'])
 def home(id):
+    conn = get_db_connection()
+    if conn is None:
+        return "Database connection error"
     try:
-        cur = mysql.connection.cursor()
+        cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (id,))
         results = cur.fetchall()
         if results:
@@ -59,6 +69,7 @@ def home(id):
 
 @app.route('/cropspage/<int:id>', methods=['GET'])
 def crops_page(id):
+    
     try:
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (id,))
@@ -75,10 +86,13 @@ def crops_page(id):
 def add_crop():
     data = request.get_json()
     subID = data.get('subID')
-    cropData = data.get('cropData')
+    cropData = data.get('cropData') 
+    conn = get_db_connection()
+    if conn is None:
+        return "Database connection error"
 
     try:
-        cur = mysql.connection.cursor()
+        cur = conn.cursor()
         # Assuming cropData includes all necessary fields
         query = """
         INSERT INTO tbl_crops (fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk,
@@ -93,7 +107,7 @@ def add_crop():
                             cropData["fld_c_CropName"], cropData["fld_c_Variety"], cropData["fld_c_Source"],
                             cropData["fld_c_DatePlanted"], cropData["fld_c_Comments"], cropData["fld_c_Yield"],
                             cropData["fld_c_WasStartedIndoors"], cropData["fld_c_isActive"]))
-        mysql.connection.commit()
+        conn.commit()
         return "Crop added successfully", 200
     except Exception as e:
         print(f"Error: {e}")
@@ -101,8 +115,11 @@ def add_crop():
 
 @app.route('/connect', methods=['GET'])
 def connect():
+    conn = get_db_connection()
+    if conn is None:
+        return "Database connection error"
     try:
-        cur = mysql.connection.cursor()
+        cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_subscribers;")
         results = cur.fetchall()
         return jsonify(results), 200
