@@ -10,10 +10,11 @@ import datetime
     display profile information --Done
     edit profile information --Done
     edit crop information  --Done
-    list tasks 
-        list all tasks
+    list tasks  --Done
+        list all tasks --Done
         list tasks by farmer --Done
     edit tasks --Done
+    add tasks --Done
     create crop types
     create task types
     delete task types
@@ -192,7 +193,7 @@ def add_crop():
 
 #Update a subscribers information 
 @app.route('/updateCropInfo', methods=['POST'])
-def updateSubscriberInfo(subID):
+def updateCropInfo():
     params = request.get_json()
     subID =params.get('subID')
     cropUpdate = params.get('cropData')
@@ -282,16 +283,48 @@ def editTask():
         cur.execute(query, (taskUpdate['fld_t_IsCompleted'], taskUpdate['fld_t_DateDue'], taskUpdate['fld_t_DateCompleted'],
                             taskUpdate['fld_t_Comments'], taskUpdate['fld_t_DateCompleted'], taskUpdate['fld_t_TaskIconPath'], subID, taskID))
         conn.commit()
-        return "Task edited succesfully"   
+        return "Task edited succesfully", 200 
     except Exception as e:
         print(f"Error:{e}")
         return "Error: error connecting to database"
     finally:
         cur.close()
+
+@app.route('/addTask', methods =['POST'])
+def addtask():
+    params = request.get_json()
+    newTask = params.get('newTask')
+    subID = params.get('subID')
+    taskTypeID = params.get('taskTypeID')
+    farmerID = params.get('farmerID')
+    locationID = params.get('locationID')
+    taskID = rand.randint()
+    conn = get_db_connection()
+    if conn is None:
+        return "Database Connection Error"
+    try:
+        cur = conn.cursor()
+        query = """
+            INSERT INTO  tbl_tasks (fld_s_SubscriberID_pk , fld_t_TaskID_pk, fld_fs_FarmerID_fk, fld_tt_TaskTypeID_fk, fld_l_LocationID_fk,
+            fld_t_IsCompleted, fld_t_DateDue, fld_t_Comments, fld_t_TaskIconPath) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """
+        cur.execute(query,(subID, taskID, farmerID, taskTypeID, locationID, 0, newTask['fld_t_DateDue'],newTask['fld_t_Comments'], newTask['fld_t_TaskIconPath'], ))
+        conn.commit()
+        return "New Task Created", 200
+    except mysql.Error.IntegrityError as err:
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return add_crop()
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Connecting to Database"
+
     
 #List Farmers
 @app.route('/listFarmers/<string: subID>', methods =['GET'])
-def listFarmers(subID):
+def listFarmers():
+    params = request.get_json()
+    subID = params.get('subID')
     conn = get_db_connection()
     if conn is None:
         return "Database Connection Error"
