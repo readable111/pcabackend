@@ -15,8 +15,8 @@ import datetime
         list tasks by farmer --Done
     edit tasks --Done
     add tasks --Done
-    create crop types
-    create task types
+    create crop types --Done
+    create task types --Done
     delete task types
     create mediums
     delete mediums
@@ -40,25 +40,22 @@ load_dotenv()
 app = Flask(__name__)
 
 # Database connection function with SSL
-def get_db_connection():
-    try:
-        conn = mysql.connector.connect(
-            host=os.getenv('AZURE_MYSQL_HOST'),
-            user=os.getenv('AZURE_MYSQL_USER'),
-            password=os.getenv('AZURE_MYSQL_PASSWORD'),
-            database=os.getenv('AZURE_MYSQL_DATABASE'),
-            port=int(os.getenv('AZURE_MYSQL_PORT')),
-            ssl_ca="./DigiCertGlobalRootCA.crt.pem",  # Path to the SSL certificate
-            ssl_verify_cert=True,
-        )
-        return conn
-    except mysql.connector.Error as err:
-        print(f"Error: {err}")
-        return None
+try:
+    conn = mysql.connector.connect(
+       host=os.getenv('AZURE_MYSQL_HOST'),
+       user=os.getenv('AZURE_MYSQL_USER'),
+       password=os.getenv('AZURE_MYSQL_PASSWORD'),
+       database=os.getenv('AZURE_MYSQL_DATABASE'),
+       port=int(os.getenv('AZURE_MYSQL_PORT')),
+       ssl_ca="./DigiCertGlobalRootCA.crt.pem",  # Path to the SSL certificate
+       ssl_verify_cert=True,
+   )
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
 
 # Routes
 
-#current Date:w
+#current Date
 @app.route('/currentDate', methods=['GET'])
 def get_current_date():
     date = datetime.datetime.now()
@@ -66,13 +63,10 @@ def get_current_date():
 
 #Get a subscribers information
 @app.route('/subscriberInfo/<string:subID>', methods=['GET'])
-def edit_profile(subID):
-    conn = get_db_connection()
-    if conn is None:
-        return "Database connection error"
+def subscriberInfo(subID):
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_subscribers WHERE fld_s_SubscriberID_pk = %s")
+        cur.execute("SELECT * FROM tbl_subscribers WHERE fld_s_SubscriberID_pk = %s", (subID))
         result = cur.fetchone()
         if result:
             return jsonify(result), 200
@@ -90,9 +84,6 @@ def updateSubscriberInfo():
     params = request.get_json()
     subID =params.get('subID')
     newSubInfo = params.get('subData')
-    conn = get_db_connection()
-    if conn is None:
-        return "Database connection error"
     try:
         cur = conn.cursor()
         query = """
@@ -114,14 +105,9 @@ def updateSubscriberInfo():
 #Get all a subscribers crops
 @app.route('/getCrops/<string:subID>', methods=['GET'])
 def getCrops(subID):
-    params = request.get_json()
-    subID = params.get("subID")
-    conn = get_db_connection()
-    if conn is None:
-        return "Database connection error"
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (id,))
+        cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (subID))
         results = cur.fetchall()
         if results:
             return jsonify(results), 200
@@ -132,14 +118,13 @@ def getCrops(subID):
         return "Error retrieving data", 500
     finally:
         cur.close()
-    
+ 
 
 #Get list of Subscriber crops
 @app.route('/cropspage/<string:subID>/<int:cropID>', methods=['GET'])
 def crops_page(subID, cropID):
-    
     try:
-        cur = mysql.connection.cursor()
+        cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s AND fld_c_CropID_pk = %s", (subID, cropID))
         results = cur.fetchall()
         if results:
@@ -159,10 +144,6 @@ def add_crop():
     subID = data.get('subID')
     cropData = data.get('cropData') 
     newCropID = rand.randint()
-    conn = get_db_connection()
-    if conn is None:
-        return "Database connection error"
-
     try:
         cur = conn.cursor()
         # Assuming cropData includes all necessary fields
@@ -197,9 +178,6 @@ def updateCropInfo():
     params = request.get_json()
     subID =params.get('subID')
     cropUpdate = params.get('cropData')
-    conn = get_db_connection()
-    if conn is None:
-        return "Database connection error"
     try:
         cur = conn.cursor()
         query = """
@@ -223,18 +201,9 @@ def updateCropInfo():
 def searchCrops():
     params = request.get_json()
 
-    conn=get_db_connection()
-    if conn is None:
-        return "Database Connection Error"
-    
-    
-
 #test database connection
 @app.route('/connect', methods=['GET'])
 def connect():
-    conn = get_db_connection()
-    if conn is None:
-        return "Database connection error"
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_subscribers;")
@@ -249,10 +218,7 @@ def connect():
 
 #Route for listing tasks by farmer    
 @app.route('/listTasks/<string:subID>/<int:farmerID>', methods=['GET'])
-def listTasks():
-    conn = get_db_connection()
-    if conn is None:
-        return "Database connection error"
+def listTasks(subID, farmerID):
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_tasks WHERE fld_s_SubscriberID_pk = %s AND fld_f_FarmerID_fk = %s", subID, farmerID)
@@ -265,15 +231,12 @@ def listTasks():
         cur.close()
     
 #Edit a certain task
-@app.route('/editTask/<string:subID>/<int:taskID>', methods=['POST'])
+@app.route('/editTask', methods=['POST'])
 def editTask():
     params = request.get_json()
     subID = params.get('subID')
     taskID = params.get('taskID')
     taskUpdate = params.get('taskUpdate')
-    conn = get_db_connection()
-    if conn is None:
-        return "Database Connection Error"
     try:
         cur = conn.cursor()
         query = """
@@ -290,6 +253,8 @@ def editTask():
     finally:
         cur.close()
 
+
+#add a new task
 @app.route('/addTask', methods =['POST'])
 def addtask():
     params = request.get_json()
@@ -299,9 +264,6 @@ def addtask():
     farmerID = params.get('farmerID')
     locationID = params.get('locationID')
     taskID = rand.randint()
-    conn = get_db_connection()
-    if conn is None:
-        return "Database Connection Error"
     try:
         cur = conn.cursor()
         query = """
@@ -322,12 +284,9 @@ def addtask():
     
 #List Farmers
 @app.route('/listFarmers/<string: subID>', methods =['GET'])
-def listFarmers():
+def listFarmers(subID):
     params = request.get_json()
     subID = params.get('subID')
-    conn = get_db_connection()
-    if conn is None:
-        return "Database Connection Error"
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_farmers WHERE  fld_s_SubscriberID_pk = %s", (subID))
@@ -339,6 +298,78 @@ def listFarmers():
     finally:
         cur.close()
 
+
+#add a new crop type
+@app.route('/addCropType', mehtods=['POST'])
+def addCropType():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    cropTypeID = rand.randint()
+    cropData = params.get('cropData')
+    try:
+        cur = conn.cursor()
+        query = """
+            INSERT INTO tbl_cropTypes(fld_ct_CropTypeID_pk, fld_f_FarmID_fk, fld_ct_CropTypeName, fld_s_SubscriberID_pk)
+            VALUES(%s,%s,%s,%s);
+        """
+        cur.execute(query, (cropTypeID, farmID, cropData, subID))
+        conn.commit()
+    except mysql.Error.IntegrityError as err:
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return addCropType()
+    except Exception as e:
+        print(f"Error connecting to database: {e}") 
+        return "Error connecting to database", 500
+    finally:
+        cur.close()
+
+@app.route('/addTaskType', methods=['POST'])
+def addTaskType():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    taskTypeID = rand.randint()
+    taskType = params.get('taskType')
+    try:
+        cur = conn.cursor()
+        query= """
+            INSERT INTO tbl_taskTypes (fld_tt_TaskTypeID_pk, fld_f_FarmID_fk, fld_s_SubscriberID_pk, fld_tt_TaskTypeName) VALUES (%s,%s,%s,%s);
+        """
+        cur.execute(query, (taskTypeID, farmID, subID, taskType))
+        conn.commit()
+    except mysql.Error.IntegrityError as err:
+        print(f"Duplicate key Detected, retrying")
+        addTaskType()
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error executing endpoint"
+    finally:
+        cur.close()
+
+
+@app.route('/addMedium', methods=['POST'])
+def addMedium():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    mediumID = rand.randint()
+    mediumType = request.get('mediumType')
+    try:
+        cur = conn.cursor()
+        query = """
+        INSERT INTO tbl_media (tbl_m_MediumID_pk, fld_m_MediumType, fld_s_SubscriberID_pk, fld_f_FarmID_fk)
+        VALUES(%s,%s,%s,%s)
+        """
+        cur.execute(query,(mediumID, mediumType, subID, farmID))
+        conn.commit()
+        return "New Medium added successfully", 200
+    except mysql.Error.IntegrityError as err:
+        print(f"Duplicate key Detected, retrying")
+        addMedium()
+    except Exception as e:
+        return "Error executing query", 500
 
 @app.route('/')
 def index():
