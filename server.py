@@ -18,7 +18,7 @@ import datetime
     create crop types --Done
     create task types --Done
     delete task types
-    create mediums
+    create mediums --Done
     delete mediums
     create locations
     delete locations
@@ -283,7 +283,7 @@ def addtask():
 
     
 #List Farmers
-@app.route('/listFarmers/<string: subID>', methods =['GET'])
+@app.route('/listFarmers/<string:subID>', methods =['GET'])
 def listFarmers(subID):
     params = request.get_json()
     subID = params.get('subID')
