@@ -197,7 +197,7 @@ def updateCropInfo():
         cur.close()
     
     
-@app.route('/searchCrops/<string:subID>/<string:userInput', methods=['GET'])
+@app.route('/searchCrops/<string:subID>/<string:userInput>', methods=['GET'])
 def searchCrops():
     params = request.get_json()
 
