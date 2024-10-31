@@ -221,7 +221,7 @@ def connect():
 def listTasks(subID, farmerID):
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_tasks WHERE fld_s_SubscriberID_pk = %s AND fld_f_FarmerID_fk = %s", (subID, farmerID))
+        cur.execute("SELECT * FROM tbl_tasks WHERE fld_s_SubscriberID_pk = %s AND fld_fs_FarmerID_fk = %s", (subID, farmerID))
         results = cur.fetchall()
         return jsonify(results), 200
     except Exception as e:
