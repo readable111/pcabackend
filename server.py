@@ -300,7 +300,7 @@ def listFarmers(subID):
 
 
 #add a new crop type
-@app.route('/addCropType', mehtods=['POST'])
+@app.route('/addCropType', methods=['POST'])
 def addCropType():
     params = request.get_json()
     subID = params.get('subID')
