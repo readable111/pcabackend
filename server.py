@@ -66,7 +66,7 @@ def get_current_date():
 def subscriberInfo(subID):
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_subscribers WHERE fld_s_SubscriberID_pk = %s", (subID))
+        cur.execute("SELECT * FROM tbl_subscribers WHERE fld_s_SubscriberID_pk = %s", (subID,))
         result = cur.fetchone()
         if result:
             return jsonify(result), 200
