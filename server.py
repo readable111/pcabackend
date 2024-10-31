@@ -7,7 +7,7 @@ import datetime
 
 '''TO DO LIST:
     endpoints:
-    display profile information --Done
+    display profile information --Done  --works
     edit profile information --Done
     edit crop information  --Done
     list tasks  --Done
@@ -221,7 +221,7 @@ def connect():
 def listTasks(subID, farmerID):
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_tasks WHERE fld_s_SubscriberID_pk = %s AND fld_f_FarmerID_fk = %s", subID, farmerID)
+        cur.execute("SELECT * FROM tbl_tasks WHERE fld_s_SubscriberID_pk = %s AND fld_f_FarmerID_fk = %s", (subID, farmerID))
         results = cur.fetchall()
         return jsonify(results), 200
     except Exception as e:
@@ -289,7 +289,7 @@ def listFarmers(subID):
     subID = params.get('subID')
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_farmers WHERE  fld_s_SubscriberID_pk = %s", (subID))
+        cur.execute("SELECT * FROM tbl_farmers WHERE  fld_s_SubscriberID_pk = %s", (subID,))
         results = cur.fetchall()
         return jsonify(results)
     except Exception as e:
