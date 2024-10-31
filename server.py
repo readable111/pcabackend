@@ -285,8 +285,6 @@ def addtask():
 #List Farmers
 @app.route('/listFarmers/<string:subID>', methods =['GET'])
 def listFarmers(subID):
-    params = request.get_json()
-    subID = params.get('subID')
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_farmers WHERE  fld_s_SubscriberID_pk = %s", (subID,))
