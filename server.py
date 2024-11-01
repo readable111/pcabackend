@@ -20,14 +20,14 @@ import datetime
     delete task types
     create mediums --Done
     delete mediums
-    create locations
+    create locations --Done
     delete locations
     delete crops
-    create farmer
+    create farmer --Done
     delete farmer
-    create farm
+    create farm  --Done
     delete farm
-    create journal entry
+    create journal entry --Done
     delete journal entry
     modify journal entry
     Crop Search query
@@ -256,7 +256,7 @@ def editTask():
 
 #add a new task
 @app.route('/addTask', methods =['POST'])
-def addtask():
+def addTask():
     params = request.get_json()
     newTask = params.get('newTask')
     subID = params.get('subID')
@@ -276,10 +276,33 @@ def addtask():
     except mysql.Error.IntegrityError as err:
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
-            return add_crop()
+            return addTask()
     except Exception as e:
         print(f"Error: {e}")
         return "Error Connecting to Database"
+
+@app.route('/addFarmer', methods=['POST'])
+def addFarmer():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    farmerName = params.get('farmerName')
+    farmerID = rand.randint()
+    try:
+        cur = conn.cursor()
+        query = """
+        INSERT INTO tbl_farmers (fld_fs_FarmerID_pk, fld_f_FarmID_fk, fld_s_SubscriberID_pk, fld_fs_FarmerFullName) VALUES (%s, %s, %s, %s);
+        """
+        cur.execute(query, (farmerID, farmID, subID, farmerName))
+        conn.commit()
+        return "Farmer Added Successfully", 500
+    except mysql.Error.IntegrityError as err:
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return addFarmer()
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Executing Endpoint"
 
     
 #List Farmers
@@ -338,8 +361,9 @@ def addTaskType():
         cur.execute(query, (taskTypeID, farmID, subID, taskType))
         conn.commit()
     except mysql.Error.IntegrityError as err:
-        print(f"Duplicate key Detected, retrying")
-        addTaskType()
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return addTaskType()
     except Exception as e:
         print(f"Error: {e}")
         return "Error executing endpoint"
@@ -364,10 +388,85 @@ def addMedium():
         conn.commit()
         return "New Medium added successfully", 200
     except mysql.Error.IntegrityError as err:
-        print(f"Duplicate key Detected, retrying")
-        addMedium()
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return addMedium()
     except Exception as e:
         return "Error executing query", 500
+    finally:
+        cur.close()
+    
+@app.route('/addLocation', methods=['POST'])
+def addLocation():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    locationID = rand.randint()
+    locationName = params.get('locationName')
+    try:
+        cur = conn.cursor()
+        query = """
+        INSERT INTO tbl_locations (fld_l_LocationID_pk, fld_f_FarmID_fk, fld_s_SubscriberID_pk, fld_l_LocationName) VALUES(%s,%s,%s,%s)
+        """
+        cur.execute(query,(locationID, farmID, subID, locationName))
+        conn.commit()
+        return "New Locarion Added Successfully", 500
+    except mysql.Error.IntegrityError as err:
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return addLocation()       
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Executing endpoint", 500
+    finally:
+        cur.close()
+
+
+@app.route('/addFarm', methods=['POST'])
+def addFarm():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmName = params.get('farmName')
+    farmID = rand.randint()
+    try:
+        cur = conn.cursor()
+        query = """
+        INSERT INTO tbl_farms (fld_f_FarmID_pk, fld_s_SubscriberID_pk, fld_f_FarmName) VALUES(%s, %s, %s);
+        """
+        cur.execute(query, (farmID, subID, farmName))
+        conn.commit()
+        return "Farm added succesfully", 200
+    except mysql.Error.IntegrityError as err:
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return addFarm()
+    except Exception as err:
+        print(f"Error: {err}")
+        return "Error Executing Endpoint", 500
+
+@app.route('/addJournalEntry', methods=['POST'])
+def addJournalEntry():
+    params = request.get_json()
+    subID = params.get('subID')
+    date = datetime.now()
+    entryID = rand.randint()
+    contents = params.get('entry')
+    try:
+        cur = conn.cursor()
+        query = """
+        INSERT INTO tbl_journalentries (fld_j_EntryID_pk, fld_j_Date, fld_s_SubscriberID_pk, fld_j_Contents) VALUES (%s, %s, %s, %s);
+        """
+        cur.execute(query, (entryID, date, subID, contents))
+        conn.commit()
+        return "New Journal entered successfully", 200
+    except mysql.Error.IntegrityError as err:
+        if "Duplicate entry" in str(err):
+            print(f"Primary Key conflict ... Attempting with new key")
+            return addJournalEntry()
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Executing Endpoint", 500
+
 
 @app.route('/')
 def index():
