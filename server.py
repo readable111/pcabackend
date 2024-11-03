@@ -16,18 +16,30 @@ import datetime
     edit tasks --Done
     add tasks --Done
     create crop types --Done
+    update crop types --Done
     create task types --Done
-    delete task types
+    list task types --Done
+    update task types --Done
+    delete task types 
     create mediums --Done
+    list mediums --Done
+    update mediums
     delete mediums
     create locations --Done
+    update locations
     delete locations
+    list locations
     delete crops
     create farmer --Done
+    update farmer
+    list farmers --Done
     delete farmer
     create farm  --Done
+    list farm
+    update farm
     delete farm
     create journal entry --Done
+    read journal entry
     delete journal entry
     modify journal entry
     Crop Search query
@@ -320,6 +332,29 @@ def listFarmers(subID):
         cur.close()
 
 
+@app.route('/updateCropType', methods=['POST'])
+def updateCropType():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID') 
+    cropTypeID = params.get('cropsTypeID')
+    cropData = params.get('cropData')
+    try:
+        cur = conn.cursor()
+        query = """
+         UPDATE tbl_cropTypes SET fld_f_FarmID_fk = %s, fld_ct_CropTypeName = %s WHERE fld_s_SubscriberID_pk = %s AND fld_ct_CropTypeID_pk = %s;
+        """
+        cur.execute(query, (farmID, cropData, subID, cropTypeID))
+        conn.commit()
+        return "Crop Type updated successfully", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error executing endpoint", 500
+    finally:
+        cur.close()
+
+
+
 #add a new crop type
 @app.route('/addCropType', methods=['POST'])
 def addCropType():
@@ -346,6 +381,45 @@ def addCropType():
     finally:
         cur.close()
 
+@app.route('listTaskTypes/<string:subID>')
+def listTaskTypes(subID):
+    try:
+        cur = conn.cursor()
+        query = """
+        SELECT * FROM tbl_taskTypes WHERE fld_s_SubscriberID_pk = %s;
+        """
+        cur.execute(query,(subID,))
+        results = cur.fetchall()
+        return results, 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error executing query", 500
+    finally:
+        cur.close()
+    
+
+
+@app.route('/updateTaskType', methods=['POST'])
+def updateTaskType():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    taskTypeID = params.get('taskTypeID')
+    taskType = params.get('taskType')
+    try:
+        cur = conn.cursor()
+        query = """
+        UPDATE tbl_taskType SET fld_f_FarmID_fk=%s, fld_tt_TaskTypeName=%s WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaksTypeID_pk = %s
+        """
+        cur.execute(query, (farmID, taskType, subID, taskTypeID))
+        conn.commit()
+        return "Successfully Updated TaksType", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Errpr executing endpoint", 500
+    finally:
+        cur.close()
+
 @app.route('/addTaskType', methods=['POST'])
 def addTaskType():
     params = request.get_json()
@@ -367,6 +441,44 @@ def addTaskType():
     except Exception as e:
         print(f"Error: {e}")
         return "Error executing endpoint"
+    finally:
+        cur.close()
+
+
+@app.route('/getMediums/<string:subID>', methods=['GET'])
+def getMediums(subID):
+    try:
+        cur = conn.cursor()
+        query = """
+        SELECT * FROM tbl_mediums WHERE fld_s_SubscriberID_pk = %s;
+        """
+        cur.exeute(query, (subID,))
+        results = cur.fetchall()
+        return results, 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error executing Endpoint", 500
+    finally:
+        cur.close()
+
+
+@app.route('/updateMedium', methods=['POST'])
+def updateMedium():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    mediumID = rand.randint()
+    mediumType = request.get('mediumType')
+    try:
+        cur = conn.cursor()
+        query = """
+        UPDATE tbl_media SET fld_m_MediumType=%s, fld_f_FarmID_fk=%s WHERE fld_s_SubscriberID_pk =%s AND fld_m_MediumID_pk;
+        """
+        cur.execute(query,(mediumType, farmID, subID, mediumID))
+        conn.commit()
+        return "updated Medium successfully", 200
+    except Exception as e:
+        return "Error executing query", 500
     finally:
         cur.close()
 
