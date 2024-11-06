@@ -42,7 +42,7 @@ import datetime
     create journal entry --Done
     read journal entry  --Done
     delete journal entry --Done
-    modify journal entry
+    modify journal entry --Done
     Crop Search query
 '''
 rand = random.SystemRandom()
@@ -461,7 +461,7 @@ def addCropType():
     finally:
         cur.close()
 
-@app.route('listTaskTypes/<string:subID>')
+@app.route('/listTaskTypes/<string:subID>')
 def listTaskTypes(subID):
     try:
         cur = conn.cursor()
