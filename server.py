@@ -4,6 +4,7 @@ import mysql.connector
 import random
 import os
 import datetime
+import asyncio
 
 '''TO DO LIST:
     endpoints:
@@ -51,6 +52,9 @@ rand = random.SystemRandom()
 load_dotenv()
 
 app = Flask(__name__)
+
+async def getID():
+    return random.randint()
 
 # Database connection function with SSL
 try:
@@ -152,11 +156,11 @@ def crops_page(subID, cropID):
 
 #Add a crop to tbl_crops
 @app.route('/addcrop', methods=['POST'])
-def add_crop():
+async def add_crop():
     data = request.get_json()
     subID = data.get('subID')
     cropData = data.get('cropData') 
-    newCropID = rand.randint()
+    newCropID = await getID()
     try:
         cur = conn.cursor()
         # Assuming cropData includes all necessary fields
