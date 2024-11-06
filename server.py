@@ -451,6 +451,7 @@ def addCropType():
         """
         cur.execute(query, (cropTypeID, farmID, cropData, subID))
         conn.commit()
+        return "Successfully added Crop Type", 200
     except mysql.Error.IntegrityError as err:
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
@@ -536,6 +537,7 @@ def addTaskType():
         """
         cur.execute(query, (taskTypeID, farmID, subID, taskType))
         conn.commit()
+        return "Successfully added task type", 200
     except mysql.Error.IntegrityError as err:
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
