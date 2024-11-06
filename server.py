@@ -788,7 +788,7 @@ def addFarm():
     finally:
         cur.close()
 
-@app.route('/listJournalEntries/<string:subID>', method=['GET'])
+@app.route('/listJournalEntries/<string:subID>', methods=['GET'])
 def listJournalEntries(subID):
     try:
         cur = conn.cursor()
