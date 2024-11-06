@@ -18,26 +18,27 @@ import datetime
     create crop types --Done
     update crop types --Done
     create task types --Done
+    dlete task --Done
     list task types --Done
     update task types --Done
-    delete task types 
+    delete task types --Done
     create mediums --Done
     list mediums --Done
-    update mediums
-    delete mediums
+    update mediums --Done
+    delete mediums --Done
     create locations --Done
-    update locations
-    delete locations
-    list locations
-    delete crops
+    update locations --Done
+    delete locations --Done
+    list locations --Done
+    delete crops --Done
     create farmer --Done
-    update farmer
+    update farmer --Done
     list farmers --Done
     delete farmer
     create farm  --Done
     list farm
     update farm
-    delete farm
+    delete farm 
     create journal entry --Done
     read journal entry
     delete journal entry
@@ -207,6 +208,26 @@ def updateCropInfo():
         return "Error updating database", 500
     finally:
         cur.close()
+
+@app.route('/deleteCrop',methods=['POST'])
+def deleteCrop():
+    params = request.get_json()
+    subID = request.get('subID')
+    cropID = request.get('cropID')
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s AND fld_c_CropID_pk = %s;
+        """
+        cur.execute(query, (subID, cropID))
+        conn.commit()
+        return "Crop Deleted successfully", 200
+    except Exception as e:
+        print(f"Error:{e}")
+        return "Error Deleting Crop"
+    finally:
+        cur.close()
+        
     
     
 @app.route('/searchCrops/<string:subID>/<string:userInput>', methods=['GET'])
@@ -241,7 +262,27 @@ def listTasks(subID, farmerID):
         return "Error connecting to database"
     finally:
         cur.close()
-    
+
+@app.route('/deleteTask', methods=['POST'])
+def deleteTask():
+    params = request.get_json()
+    subID = params.get('subID')
+    taskID = params.get('taskID')
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_tasks WHERE fld_s_SusbscriberID_pk =  AND %s fld_t_TaskID_pk = %s
+        """
+        cur.execute(query, (subID, taskID))
+        conn.commit()
+        return "Successfully deleted task", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error deleting task"
+    finally:
+        cur.close()
+
+
 #Edit a certain task
 @app.route('/editTask', methods=['POST'])
 def editTask():
@@ -315,7 +356,46 @@ def addFarmer():
     except Exception as e:
         print(f"Error: {e}")
         return "Error Executing Endpoint"
+    finally:
+        cur.close()
 
+@app.route('/updateFarmer', methods=['POST'])
+def updateFarmer():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    farmerName = params.get('farmerName')
+    farmerID = params.get('farmerID')   
+    try:
+        cur = conn.cursor()
+        query = """
+        UPDATE tbl_farmers SET fld_fs_FarmerName = %s, fld_f_FarmID_fk = %s WHERE fld_s_SubscriberID_pk = %s AND fld_fs_FarmerID_pk = %s;
+        """
+        cur.execute(query, (farmerName, farmID, subID, farmerID))
+        conn.commit()
+        return "Successfully Updated Farmer", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Updating Farmer", 500
+    finally:
+        cur.close()
+
+@app.route('/deleteFarmer', methods=['POST'])
+def deleteFarmer():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmerID = params.get('farmerID')
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_farmers WHERE fld_s_SubscriberID_pk = %s AND  fld_fs_FarmerID_pk= %s;
+        """
+        cur.execute(query, (subID, farmerID))
+        conn.commit()
+        return "Successfully Updated Farmers"
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Deleting Farmer"
     
 #List Farmers
 @app.route('/listFarmers/<string:subID>', methods =['GET'])
@@ -420,6 +500,25 @@ def updateTaskType():
     finally:
         cur.close()
 
+@app.route('deleteTaskType', methods=['POST'])
+def deleteTaskType():
+    params = request.get_json()
+    subID = params.get('subID')
+    taskTypeID = params.get('tasktTypeID')
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_taskType WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaskTypeID_pk = %s;
+        """
+        cur.execute(query, (subID, taskTypeID))
+        conn.commit()
+        return "Successfully deleted task Type"
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Deleting Task Type"
+    finally:
+        cur.close()
+
 @app.route('/addTaskType', methods=['POST'])
 def addTaskType():
     params = request.get_json()
@@ -482,6 +581,25 @@ def updateMedium():
     finally:
         cur.close()
 
+@app.route('/deleteMedium', methods=['POST'])
+def deleteMedium():
+    params = request.get_json()
+    subID = params.get('subID')
+    mediumID = params.get('mediumID')
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_media WHERE fld_s_SusbscriberID_pk = %s AND fld_m_MediumID_pk = %s;
+        """
+        cur.execute(query,(subID, mediumID))
+        conn.commit()
+        return "Medium deletd successfully", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Deleting Medium"
+    finally: 
+        cur.close()
+
 
 @app.route('/addMedium', methods=['POST'])
 def addMedium():
@@ -508,6 +626,46 @@ def addMedium():
     finally:
         cur.close()
     
+@app.route('/deleteLocation', methods=['POST'])
+def deleteLocation():
+    params = request.get_json()
+    subID = params.get('subID')
+    locationID = rand.randint()
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_locations WHERE fld_s_SubscriberID_pk = %s AND fld_l_LocationID_pk = %s;     
+        """
+        cur.execute(query, (subID, locationID))
+        conn.commit()
+        return "Deleted location successfully", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Deleting Location", 500
+    finally:
+        cur.close()
+
+@app.route('/updateLocation', methods=['POST'])
+def updateLocation():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    locationID = params.get('locationID')
+    locationName = params.get('locationName')
+    try:
+        cur =conn.cursor()
+        query = """
+        UPDATE tbl_locations SET fld_f_FarmID_fk = %s, fld_l_LocationName = %s WHERE fld_s_SubscriberID_pk = %s AND fld_l_LocationID_pk = %s; 
+        """
+        cur.execute(query, (farmID, locationName, subID, locationID))
+        conn.commit()
+        return "Successfully Updated Location", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Updating Location"
+    finally:
+        cur.close()
+
 @app.route('/addLocation', methods=['POST'])
 def addLocation():
     params = request.get_json()
@@ -530,6 +688,22 @@ def addLocation():
     except Exception as e:
         print(f"Error: {e}")
         return "Error Executing endpoint", 500
+    finally:
+        cur.close()
+
+@app.route('listLocation/<string:subID>', methods=['GET'])
+def listLocations(subID):
+    try:
+        cur = conn.cursor()
+        query = """
+        SELECT * FROM tbl_locations WHERE fld_s_SubscriberID_pk = %s;
+        """
+        cur.execute(query, (subID,))
+        results = cur.fetchall()
+        return results, 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Getting Locations"
     finally:
         cur.close()
 
