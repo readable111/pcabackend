@@ -489,7 +489,8 @@ def updateTaskType():
     try:
         cur = conn.cursor()
         query = """
-        UPDATE tbl_taskType SET fld_f_FarmID_fk=%s, fld_tt_TaskTypeName=%s WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaskTypeID_pk = %s
+        UPDATE tbl_taskTypes SET fld_f_FarmID_fk=%s, fld_tt_TaskTypeName=%s WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaskTypeID_pk = %s
+
         """
         cur.execute(query, (farmID, taskType, subID, taskTypeID))
         conn.commit()
@@ -508,7 +509,7 @@ def deleteTaskType():
     try:
         cur = conn.cursor()
         query = """
-        DELETE FROM tbl_taskType WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaskTypeID_pk = %s;
+        DELETE FROM tbl_taskTypes WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaskTypeID_pk = %s;
         """
         cur.execute(query, (subID, taskTypeID))
         conn.commit()
