@@ -34,14 +34,14 @@ import datetime
     create farmer --Done
     update farmer --Done
     list farmers --Done
-    delete farmer
+    delete farmer --Done
     create farm  --Done
-    list farm
-    update farm
-    delete farm 
+    list farm --Done
+    update farm --Done
+    delete farm  --Done
     create journal entry --Done
-    read journal entry
-    delete journal entry
+    read journal entry  --Done
+    delete journal entry --Done
     modify journal entry
     Crop Search query
 '''
@@ -707,6 +707,62 @@ def listLocations(subID):
     finally:
         cur.close()
 
+@app.route('/listFarms/<string:subID>', methods=['GET'])
+def listFarms(subID):
+    try:
+        cur = conn.cursor()
+        query = """
+        SELECT * FROM tbl_farms WHERE fld_s_SubscriberID_pk = %s;
+        """
+        cur.execute(query, (subID,))
+        results = cur.fetchall()
+        return results, 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error getting Farms"
+    finally: cur.close()
+
+@app.route('/updateFarm', methods=['POST'])
+def updateFarm():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmName = params.get('farmName')
+    farmID = rand.randint()
+    try:
+        cur = conn.cursor()
+        query = """
+        UPDATE tbl_farms SET fld_f_FarmName = %s WHERE fld_s_SubscriberID_pk = %s AND fld_f_FarmName = %s;
+        """
+        cur.execute(query, (farmName, subID, farmID))
+        conn.commit()
+        return "Successfully updated farm", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Updating Farm", 500
+    finally: 
+        cur.close()
+
+
+@app.route('/deleteFarm', methods=['POST'])
+def deleteFarm():
+    params = request.get_json()
+    subID = params.get('subID')
+    farmID = params.get('farmID')
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_farms WHERE fld_s_SubscriberID_pk = %s AND fld_f_FarmID_pk = %s;
+        """
+        cur.execute()
+        conn.commit()
+        return "Successfully Deleted Farm", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Deleting Farm", 500
+    finally:
+        cur.close()
+
+
 
 @app.route('/addFarm', methods=['POST'])
 def addFarm():
@@ -729,6 +785,64 @@ def addFarm():
     except Exception as err:
         print(f"Error: {err}")
         return "Error Executing Endpoint", 500
+    finally:
+        cur.close()
+
+@app.route('/listJournalEntries/<string:subID>', method=['GET'])
+def listJournalEntries(subID):
+    try:
+        cur = conn.cursor()
+        query = """
+        SELECT * FROM tbl_journalentries WHERE fld_s_SubscriberID_pk = %s;
+        """
+        cur.execute(query, (subID,))
+        results = cur.fetchall()
+        return results, 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error Getting journal entries", 500
+    finally:
+        cur.close()
+
+@app.route('/deleteJournalEntry', methods=['POST'])
+def deleteJournalEntry():
+    params = request.get_json()
+    subID = params.get('subID')
+    entryID = params.get('entryID')
+    try:
+        cur = conn.cursor()
+        query = """
+        DELETE FROM tbl_journalentries WHER fld_s_SubscriberID_pk = %s AND fld_j_EntryID_pk = %s;
+        """
+        cur.execute(query, (subID, entryID))
+        conn.commit()
+        return "Successfully Deleted Journal Entry", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error deleting entry", 500
+    finally:
+        cur.close()
+
+@app.route('/updateJournalEntry', methods=['POST'])
+def updateJournalEntry():
+    params = request.get_json()
+    subID = params.get('subID')
+    entryID = params.get('entryID')
+    contents = params.get('entry')
+    try:
+        cur = conn.cursor()
+        query = """
+        UPDATE tbl_journalentries SET fld_j_Contents = %s WHERE fld_s_SubscriberID_pk = %s AND fld_j_EntryID_pk = %s;
+        """
+        cur.execute(query,(contents, subID, entryID))
+        conn.commit()
+        return "Successfully Updated Journal", 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error updating Journal", 400
+    finally: 
+        cur.close()
+
 
 @app.route('/addJournalEntry', methods=['POST'])
 def addJournalEntry():
