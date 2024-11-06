@@ -271,7 +271,7 @@ def deleteTask():
     try:
         cur = conn.cursor()
         query = """
-        DELETE FROM tbl_tasks WHERE fld_s_SusbscriberID_pk =  AND %s fld_t_TaskID_pk = %s
+        DELETE FROM tbl_tasks WHERE fld_s_SusbscriberID_pk = %s AND %s fld_t_TaskID_pk = %s
         """
         cur.execute(query, (subID, taskID))
         conn.commit()
