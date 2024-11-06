@@ -332,7 +332,7 @@ def addTask():
             return addTask()
     except Exception as e:
         print(f"Error: {e}")
-        return "Error Connecting to Database"
+        return "Error Connecting to Database", 500
 
 @app.route('/addFarmer', methods=['POST'])
 def addFarmer():
@@ -516,7 +516,8 @@ def deleteTaskType():
         return "Successfully deleted task Type"
     except Exception as e:
         print(f"Error: {e}")
-        return "Error Deleting Task Type"
+        return "Error Deleting Task Type", 500
+    
     finally:
         cur.close()
 
@@ -526,7 +527,7 @@ def addTaskType():
     subID = params.get('subID')
     farmID = params.get('farmID')
     taskTypeID = rand.randint()
-    print(taskTypeID)
+    print(f"{taskTypeID}")
     taskType = params.get('taskType')
     try:
         cur = conn.cursor()
@@ -541,7 +542,7 @@ def addTaskType():
             return addTaskType()
     except Exception as e:
         print(f"Error: {e}")
-        return "Error executing endpoint"
+        return "Error executing endpoint", 500
     finally:
         cur.close()
 
@@ -598,7 +599,7 @@ def deleteMedium():
         return "Medium deletd successfully", 200
     except Exception as e:
         print(f"Error: {e}")
-        return "Error Deleting Medium"
+        return "Error Deleting Medium", 500
     finally: 
         cur.close()
 
