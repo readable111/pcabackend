@@ -691,7 +691,7 @@ def addLocation():
     finally:
         cur.close()
 
-@app.route('listLocation/<string:subID>', methods=['GET'])
+@app.route('/listLocation/<string:subID>', methods=['GET'])
 def listLocations(subID):
     try:
         cur = conn.cursor()
