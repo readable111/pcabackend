@@ -500,7 +500,7 @@ def updateTaskType():
     finally:
         cur.close()
 
-@app.route('deleteTaskType', methods=['POST'])
+@app.route('/deleteTaskType', methods=['POST'])
 def deleteTaskType():
     params = request.get_json()
     subID = params.get('subID')
