@@ -528,7 +528,7 @@ def addTaskType():
     subID = params.get('subID')
     farmID = params.get('farmID')
     taskTypeID = rand.randint()
-    print(f"{taskTypeID}")
+    print(f"Task ID to be insterted:{taskTypeID}")
     taskType = params.get('taskType')
     try:
         cur = conn.cursor()
