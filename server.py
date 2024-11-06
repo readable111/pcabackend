@@ -121,7 +121,7 @@ def getCrops(subID):
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (subID))
-     = cur.fetchall()
+        results = cur.fetchall()
         if results:
             return jsonify(results), 200
         else:
