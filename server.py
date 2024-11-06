@@ -121,7 +121,7 @@ def getCrops(subID):
     try:
         cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (subID))
-        results = cur.fetchall()
+     = cur.fetchall()
         if results:
             return jsonify(results), 200
         else:
@@ -470,7 +470,7 @@ def listTaskTypes(subID):
         """
         cur.execute(query,(subID,))
         results = cur.fetchall()
-        return results, 200
+        return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
         return "Error executing query", 500
@@ -489,7 +489,7 @@ def updateTaskType():
     try:
         cur = conn.cursor()
         query = """
-        UPDATE tbl_taskType SET fld_f_FarmID_fk=%s, fld_tt_TaskTypeName=%s WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaksTypeID_pk = %s
+        UPDATE tbl_taskType SET fld_f_FarmID_fk=%s, fld_tt_TaskTypeName=%s WHERE fld_s_SubscriberID_pk = %s AND fld_tt_TaskTypeID_pk = %s
         """
         cur.execute(query, (farmID, taskType, subID, taskTypeID))
         conn.commit()
@@ -504,7 +504,7 @@ def updateTaskType():
 def deleteTaskType():
     params = request.get_json()
     subID = params.get('subID')
-    taskTypeID = params.get('tasktTypeID')
+    taskTypeID = params.get('taskTypeID')
     try:
         cur = conn.cursor()
         query = """
@@ -553,7 +553,7 @@ def getMediums(subID):
         """
         cur.exeute(query, (subID,))
         results = cur.fetchall()
-        return results, 200
+        return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
         return "Error executing Endpoint", 500
@@ -700,7 +700,7 @@ def listLocations(subID):
         """
         cur.execute(query, (subID,))
         results = cur.fetchall()
-        return results, 200
+        return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
         return "Error Getting Locations"
@@ -716,7 +716,7 @@ def listFarms(subID):
         """
         cur.execute(query, (subID,))
         results = cur.fetchall()
-        return results, 200
+        return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
         return "Error getting Farms"
@@ -797,7 +797,7 @@ def listJournalEntries(subID):
         """
         cur.execute(query, (subID,))
         results = cur.fetchall()
-        return results, 200
+        return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
         return "Error Getting journal entries", 500
