@@ -161,6 +161,7 @@ async def add_crop():
     subID = data.get('subID')
     cropData = data.get('cropData') 
     newCropID = await getID()
+    await print(f"{newCropID}")
     try:
         cur = conn.cursor()
         # Assuming cropData includes all necessary fields
@@ -179,10 +180,10 @@ async def add_crop():
                             cropData["fld_c_WasStartedIndoors"], cropData["fld_c_isActive"]))
         conn.commit()
         return "Crop added successfully", 200
-    except mysql.connector.IntegrityError as err: #Handling duplicate keys, this method only called if the key generated is in conflict witht the records in the table
-        if "Duplicate entry" in str(err):
-            print(f"Primary Key conflict ... Attempting with new key")
-            return add_crop()
+  #  except mysql.connector.IntegrityError as err: #Handling duplicate keys, this method only called if the key generated is in conflict witht the records in the table
+  #      if "Duplicate entry" in str(err):
+  #          print(f"Primary Key conflict ... Attempting with new key")
+ #           return add_crop()
     except Exception as e:
         print(f"Error: {e}")
         return "Error adding crop", 500
