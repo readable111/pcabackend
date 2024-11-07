@@ -139,5 +139,67 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 200)
 
+    def test_add_farmer(self):
+        payload = {
+            "subID": "sub1234",
+            "farmID": "farm456",
+            "farmerName": "John Doe"
+        }
+        response = requests.post(f"{BASE_URL}/addFarmer", json=payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Farmer Added Successfully", response.text)
+
+    def test_update_farmer(self):
+        payload = {
+            "subID": "sub123",
+            "farmID": "farm456",
+            "farmerID": "farmer789",
+            "farmerName": "Jane Doe"
+        }
+        response = requests.post(f"{BASE_URL}/updateFarmer", json=payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Successfully Updated Farmer", response.text)
+
+    def test_delete_farmer(self):
+        payload = {
+            "subID": "sub123",
+            "farmerID": "farmer789"
+        }
+        response = requests.post(f"{BASE_URL}/deleteFarmer", json=payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Successfully Updated Farmers", response.text)
+
+    def test_list_farmers(self):
+        subID = "sub123"
+        response = requests.get(f"{BASE_URL}/listFarmers/{subID}")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.json(), list)
+
+    def test_update_crop_type(self):
+        payload = {
+            "subID": "sub123",
+            "farmID": "farm456",
+            "cropsTypeID": "crop123",
+            "cropData": "New Crop Data"
+        }
+        response = requests.post(f"{BASE_URL}/updateCropType", json=payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Crop Type updated successfully", response.text)
+
+    def test_add_crop_type(self):
+        payload = {
+            "subID": "sub123",
+            "farmID": "farm456",
+            "cropData": "Wheat"
+        }
+        response = requests.post(f"{BASE_URL}/addCropType", json=payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Successfully added Crop Type", response.text)
+
+    def test_list_task_types(self):
+        subID = "sub123"
+        response = requests.get(f"{BASE_URL}/listTaskTypes/{subID}")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.json(), list)
 if __name__ == '__main__':
     unittest.main()

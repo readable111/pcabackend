@@ -339,12 +339,12 @@ def addTask():
         return "Error Connecting to Database", 500
 
 @app.route('/addFarmer', methods=['POST'])
-def addFarmer():
+async def addFarmer():
     params = request.get_json()
     subID = params.get('subID')
     farmID = params.get('farmID')
     farmerName = params.get('farmerName')
-    farmerID = rand.randint()
+    farmerID = await getID()
     try:
         cur = conn.cursor()
         query = """
@@ -352,14 +352,14 @@ def addFarmer():
         """
         cur.execute(query, (farmerID, farmID, subID, farmerName))
         conn.commit()
-        return "Farmer Added Successfully", 500
+        return "Farmer Added Successfully", 200 
     except mysql.Error.IntegrityError as err:
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
             return addFarmer()
     except Exception as e:
         print(f"Error: {e}")
-        return "Error Executing Endpoint"
+        return "Error Executing Endpoint", 500
     finally:
         cur.close()
 
@@ -373,7 +373,7 @@ def updateFarmer():
     try:
         cur = conn.cursor()
         query = """
-        UPDATE tbl_farmers SET fld_fs_FarmerName = %s, fld_f_FarmID_fk = %s WHERE fld_s_SubscriberID_pk = %s AND fld_fs_FarmerID_pk = %s;
+        UPDATE tbl_farmers SET fld_fs_FarmerFullName = %s, fld_f_FarmID_fk = %s WHERE fld_s_SubscriberID_pk = %s AND fld_fs_FarmerID_pk = %s;
         """
         cur.execute(query, (farmerName, farmID, subID, farmerID))
         conn.commit()
