@@ -54,7 +54,7 @@ load_dotenv()
 app = Flask(__name__)
 
 async def getID():
-    return random.randint()
+    return random.randint(0,4000000000)
 
 # Database connection function with SSL
 try:
@@ -314,14 +314,14 @@ def editTask():
 
 #add a new task
 @app.route('/addTask', methods =['POST'])
-def addTask():
+async def addTask():
     params = request.get_json()
     newTask = params.get('newTask')
     subID = params.get('subID')
     taskTypeID = params.get('taskTypeID')
     farmerID = params.get('farmerID')
     locationID = params.get('locationID')
-    taskID = rand.randint()
+    taskID = await getID()
     try:
         cur = conn.cursor()
         query = """
@@ -442,11 +442,11 @@ def updateCropType():
 
 #add a new crop type
 @app.route('/addCropType', methods=['POST'])
-def addCropType():
+async def addCropType():
     params = request.get_json()
     subID = params.get('subID')
     farmID = params.get('farmID')
-    cropTypeID = rand.randint()
+    cropTypeID = getID()
     cropData = params.get('cropData')
     try:
         cur = conn.cursor()
@@ -528,11 +528,11 @@ def deleteTaskType():
         cur.close()
 
 @app.route('/addTaskType', methods=['POST'])
-def addTaskType():
+async def addTaskType():
     params = request.get_json()
     subID = params.get('subID')
     farmID = params.get('farmID')
-    taskTypeID = rand.randint()
+    taskTypeID = await getID()
     print(f"Task ID to be insterted:{taskTypeID}")
     taskType = params.get('taskType')
     try:
@@ -612,11 +612,11 @@ def deleteMedium():
 
 
 @app.route('/addMedium', methods=['POST'])
-def addMedium():
+async def addMedium():
     params = request.get_json()
     subID = params.get('subID')
     farmID = params.get('farmID')
-    mediumID = rand.randint()
+    mediumID = await getID()
     mediumType = request.get('mediumType')
     try:
         cur = conn.cursor()
@@ -640,7 +640,7 @@ def addMedium():
 def deleteLocation():
     params = request.get_json()
     subID = params.get('subID')
-    locationID = rand.randint()
+    locationID = params.get('locationID')
     try:
         cur = conn.cursor()
         query = """
@@ -677,11 +677,11 @@ def updateLocation():
         cur.close()
 
 @app.route('/addLocation', methods=['POST'])
-def addLocation():
+async def addLocation():
     params = request.get_json()
     subID = params.get('subID')
     farmID = params.get('farmID')
-    locationID = rand.randint()
+    locationID = await getID()
     locationName = params.get('locationName')
     try:
         cur = conn.cursor()
@@ -775,11 +775,11 @@ def deleteFarm():
 
 
 @app.route('/addFarm', methods=['POST'])
-def addFarm():
+async def addFarm():
     params = request.get_json()
     subID = params.get('subID')
     farmName = params.get('farmName')
-    farmID = rand.randint()
+    farmID = await getID()
     try:
         cur = conn.cursor()
         query = """
@@ -855,11 +855,11 @@ def updateJournalEntry():
 
 
 @app.route('/addJournalEntry', methods=['POST'])
-def addJournalEntry():
+async def addJournalEntry():
     params = request.get_json()
     subID = params.get('subID')
     date = datetime.now()
-    entryID = rand.randint()
+    entryID = await getID()
     contents = params.get('entry')
     try:
         cur = conn.cursor()
