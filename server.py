@@ -357,7 +357,7 @@ async def addFarmer():
     except mysql.Error.IntegrityError as err:
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
-            return addFarmer()
+            return ()
     except Exception as e:
         print(f"Error: {e}")
         return "Error Executing Endpoint", 500
@@ -590,6 +590,19 @@ def updateMedium():
         return "Error executing query", 500
     finally:
         cur.close()
+@app.route('/getCropMedium/<string:subID>/<int:cropID>', methods =['GET'])
+def getCropMedium(subID, cropID):
+    try:
+        cur = conn.cursor()
+        query = """
+        SELECT m.* FROM tbl_media AS m INNER JOIN tbl_crops AS C ON m.fld_s_SubscriberID_pk = c.fld_s_SubscriberID_pk AND  m.fld_m_MediumID_pk = c.fld_m_MediumID_fk WHERE c.fld_s_SubscriberID_pk = %s AND fld_c_CropID_pk = %s;
+        """
+        cur.execute(query, (subID, cropID))
+        results = cur.fetchone()
+        return jsonify(results), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error executing endpoint", 500
 
 @app.route('/deleteMedium', methods=['POST'])
 def deleteMedium():
