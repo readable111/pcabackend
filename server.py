@@ -299,7 +299,7 @@ def editTask():
         cur = conn.cursor()
         query = """
             UPDATE tbl_tasks SET fld_t_IsCompleted = %s, fld_t_DateDue = %s, fld_t_DateCompleted = %s, fld_t_Comments = %s, fld_t_DateCompleted = %s,
-              fld_t_TasksIconPath = %s WHERE fld_s_SubscriberID_pk = %s AND fld_t_TaskID_pk = %s
+              fld_t_TaskIconPath = %s WHERE fld_s_SubscriberID_pk = %s AND fld_t_TaskID_pk = %s
         """
         cur.execute(query, (taskUpdate['fld_t_IsCompleted'], taskUpdate['fld_t_DateDue'], taskUpdate['fld_t_DateCompleted'],
                             taskUpdate['fld_t_Comments'], taskUpdate['fld_t_DateCompleted'], taskUpdate['fld_t_TaskIconPath'], subID, taskID))
