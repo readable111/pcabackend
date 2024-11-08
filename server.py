@@ -446,7 +446,7 @@ async def addCropType():
     params = request.get_json()
     subID = params.get('subID')
     farmID = params.get('farmID')
-    cropTypeID = getID()
+    cropTypeID = await getID()
     cropData = params.get('cropData')
     try:
         cur = conn.cursor()
@@ -621,7 +621,7 @@ async def addMedium():
     try:
         cur = conn.cursor()
         query = """
-        INSERT INTO tbl_media (tbl_m_MediumID_pk, fld_m_MediumType, fld_s_SubscriberID_pk, fld_f_FarmID_fk)
+        INSERT INTO tbl_media (tbl_m_MediumID_pk, fld_m_MediumType, fld_s_SubscriberID_pk, fld_f_FarmID_fk);
         VALUES(%s,%s,%s,%s)
         """
         cur.execute(query,(mediumID, mediumType, subID, farmID))
