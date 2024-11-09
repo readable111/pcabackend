@@ -159,7 +159,7 @@ def crops_page(subID, cropID):
 async def add_crop():
     data = request.get_json()
     subID = data.get('subID')
-    cropData = data.get('cropData')
+    cropData = await data.get('cropData')
     newCropID = await getID()
     await print(f"{newCropID}")
     await print(f"{cropData}")
