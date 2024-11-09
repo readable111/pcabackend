@@ -163,7 +163,7 @@ async def add_crop():
     newCropID = await getID()
     try:
         cur = conn.cursor()
-        queryData = (
+        queryData = tuple(
             newCropID, subID, cropData['fld_c_ZipCode'], cropData['fld_c_State'],
             cropData['fld_f_FarmID_fk'], cropData['fld_c_HRFNumber'], cropData['fld_m_MediumID_fk'],
             cropData['fld_l_LocationID_fk'], cropData['fld_ct_CropTypeID_fk'], cropData['fld_c_CropName'],
