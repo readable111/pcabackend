@@ -58,24 +58,22 @@ class TestApp(unittest.TestCase):
         # Define a sample payload with all required fields
         payload = {
             "subID": "sub123",
-            "cropData": {
-                "fld_c_ZipCode": "12345",
-                "fld_c_State": "TX",
-                "fld_f_FarmID_fk": 1,
-                "fld_c_HRFNumber": 1234,
-                "fld_m_MediumID_fk": 2,
-                "fld_l_LocationID_fk": 3,
-                "fld_ct_CropTypeID_fk": 4,
-                "fld_CropImg": "",
-                "fld_c_CropName": "Test Crop",
-                "fld_c_Variety": "Test Variety",
-                "fld_c_Source": "Test Source",
-                "fld_c_DatePlanted": datetime.now().isoformat(),
-                "fld_c_Comments": "Test comments",
-                "fld_c_Yield": "goodf",
-                "fld_c_WasStartedIndoors": 0,
-                "fld_c_isActive": 0
-            }
+            "cropData":{
+            "fld_c_ZipCode": "12345",
+            "fld_c_State": "TX",
+            "fld_f_FarmID_fk": 1,
+            "fld_c_HRFNumber": 1234,
+            "fld_l_LocationID_fk": 1,
+            "fld_ct_CropTypeID_fk": 1,
+            "fld_c_CropName": "Test Crop",
+            "fld_c_Variety": "Test Variety",
+            "fld_c_Source": "Test Source",
+            "fld_c_DatePlanted": "2024-10-10",
+            "fld_c_Comments": "Test comments",
+            "fld_c_Yield": "Good",  # Set fld_c_Yield to a valid string value
+            "fld_c_WasStartedIndoors": 0b0,
+            "fld_c_isActive": 0b0
+        }
         }
 
         # Send POST request to the /addcrop endpoint
