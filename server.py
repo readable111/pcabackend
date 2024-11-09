@@ -167,10 +167,10 @@ async def add_crop():
         # Assuming cropData includes all necessary fields
         query = """
         INSERT INTO tbl_crops (fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk, fld_c_HRFNumber
-                               fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk, fld_CropImg, fld_c_HRFNumber,
+                               fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk, fld_c_HRFNumber,
                                fld_c_CropName, fld_c_Variety, fld_c_Source, fld_c_DatePlanted, fld_c_Comments,
                                fld_c_Yield, fld_c_WasStartedIndoors, fld_c_isActive)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cur.execute(query, (newCropID, subID, cropData["fld_c_ZipCode"], cropData["fld_c_State"],
                             cropData["fld_f_FarmID_fk"], cropData['fld_c_HRFNumber'], cropData["fld_m_MediumID_fk"], cropData["fld_l_LocationID_fk"],
