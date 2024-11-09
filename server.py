@@ -183,7 +183,7 @@ async def add_crop():
             cropData["fld_l_LocationID_fk"], cropData["fld_ct_CropTypeID_fk"], cropData["fld_c_CropName"],
             cropData["fld_c_Variety"], cropData["fld_c_Source"], cropData["fld_c_DatePlanted"],
             cropData["fld_c_Comments"], cropData["fld_c_Yield"], cropData["fld_c_WasStartedIndoors"],
-            cropData["fld_c_isActive"]
+            cropData["fld_c_isActive"],
         ))
         conn.commit()
         return "Crop added successfully", 200
