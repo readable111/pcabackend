@@ -440,7 +440,7 @@ def updateCropType():
 
 
 #add a new crop type
-@app.route('/Type', methods=['POST'])
+@app.route('/addCropType', methods=['POST'])
 async def addCropType():
     params = request.get_json()
     subID = params.get('subID')
