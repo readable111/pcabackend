@@ -178,12 +178,12 @@ async def add_crop():
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cur.execute(query, (
-            newCropID, subID, cropData["fld_c_ZipCode"], cropData["fld_c_State"],
-            cropData["fld_f_FarmID_fk"], cropData["fld_c_HRFNumber"], cropData["fld_m_MediumID_fk"],
-            cropData["fld_l_LocationID_fk"], cropData["fld_ct_CropTypeID_fk"], cropData["fld_c_CropName"],
-            cropData["fld_c_Variety"], cropData["fld_c_Source"], cropData["fld_c_DatePlanted"],
-            cropData["fld_c_Comments"], cropData["fld_c_Yield"], cropData["fld_c_WasStartedIndoors"],
-            cropData["fld_c_isActive"],
+            newCropID, subID, cropData['fld_c_ZipCode'], cropData['fld_c_State'],
+            cropData['fld_f_FarmID_fk'], cropData['fld_c_HRFNumber'], cropData['fld_m_MediumID_fk'],
+            cropData['fld_l_LocationID_fk'], cropData['fld_ct_CropTypeID_fk'], cropData['fld_c_CropName'],
+            cropData['fld_c_Variety'], cropData['fld_c_Source'], cropData['fld_c_DatePlanted'],
+            cropData['fld_c_Comments'], cropData['fld_c_Yield'], cropData['fld_c_WasStartedIndoors'],
+            cropData['fld_c_isActive'],
         ))
         conn.commit()
         return "Crop added successfully", 200
