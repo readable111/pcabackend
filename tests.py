@@ -1,6 +1,8 @@
 import unittest
 import json
-import requests  # Use requests to make real HTTP requests to the deployed Flask app
+import requests
+from datetime import datetime 
+
 
 BASE_URL = "https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net"  # Replace this with the actual URL of your deployed app
 
@@ -74,7 +76,7 @@ class TestApp(unittest.TestCase):
 
     def test_addTask(self):
         newTask = {
-            "fld_t_DateDue": "2024-01-01",
+            "fld_t_DateDue": datetime.now().isoformat(),
             "fld_t_Comments": "New task",
             "fld_t_TaskIconPath": "/path/to/icon"
         }
@@ -141,8 +143,8 @@ class TestApp(unittest.TestCase):
 
     def test_add_farmer(self):
         payload = {
-            "subID": "sub1234",
-            "farmID": "farm456",
+            "subID": "sub123",
+            "farmID": 1,
             "farmerName": "John Doe"
         }
         response = requests.post(f"{BASE_URL}/addFarmer", json=payload)
@@ -152,8 +154,8 @@ class TestApp(unittest.TestCase):
     def test_update_farmer(self):
         payload = {
             "subID": "sub123",
-            "farmID": "farm456",
-            "farmerID": "farmer789",
+            "farmID": 1,
+            "farmerID": 1,
             "farmerName": "Jane Doe"
         }
         response = requests.post(f"{BASE_URL}/updateFarmer", json=payload)
@@ -163,7 +165,7 @@ class TestApp(unittest.TestCase):
     def test_delete_farmer(self):
         payload = {
             "subID": "sub123",
-            "farmerID": "farmer789"
+            "farmerID": 1
         }
         response = requests.post(f"{BASE_URL}/deleteFarmer", json=payload)
         self.assertEqual(response.status_code, 200)
@@ -178,23 +180,55 @@ class TestApp(unittest.TestCase):
     def test_update_crop_type(self):
         payload = {
             "subID": "sub123",
-            "farmID": "farm456",
-            "cropsTypeID": "crop123",
+            "farmID": 1,
+            "cropsTypeID": 1,
             "cropData": "New Crop Data"
         }
         response = requests.post(f"{BASE_URL}/updateCropType", json=payload)
         self.assertEqual(response.status_code, 200)
         self.assertIn("Crop Type updated successfully", response.text)
 
-    def test_add_crop_type(self):
+    def test_get_crop_medium_success(self):
+        # Define a test subscriber ID and crop ID that are expected to exist in the database
+        test_subID = "sub123"
+        test_cropID = 1
+
+        # Send GET request to the /getCropMedium endpoint
+        response = requests.get(f"{BASE_URL}/getCropMedium/{test_subID}/{test_cropID}")
+
+        # Check if the response status code is 200, indicating success
+        self.assertEqual(response.status_code, 200)
+
+    def test_add_crop_success(self):
+        # Define a sample payload with all required fields
         payload = {
             "subID": "sub123",
-            "farmID": "farm456",
-            "cropData": "Wheat"
+            "cropData": {
+                "fld_c_ZipCode": "12345",
+                "fld_c_State": "TX",
+                "fld_f_FarmID_fk": 1,
+                "fld_c_HRFNumber": "HRF123",
+                "fld_m_MediumID_fk": 2,
+                "fld_l_LocationID_fk": 3,
+                "fld_ct_CropTypeID_fk": 1,
+                "fld_c_CropName": "Test Crop",
+                "fld_c_Variety": "Test Variety",
+                "fld_c_Source": "Test Source",
+                "fld_c_DatePlanted": datetime.now().isoformat(),
+                "fld_c_Comments": "Test comments",
+                "fld_c_Yield": "yadyayda",
+                "fld_c_WasStartedIndoors": 0,
+                "fld_c_isActive": 0
+            }
         }
-        response = requests.post(f"{BASE_URL}/addCropType", json=payload)
+
+        # Send POST request to the /addcrop endpoint
+        response = requests.post(f"{BASE_URL}/addcrop", json=payload)
+
+        # Check if the response status code is 200, indicating success
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Successfully added Crop Type", response.text)
+        self.assertEqual(response.text, "Crop added successfully")
+
 
     def test_list_task_types(self):
         subID = "sub123"
