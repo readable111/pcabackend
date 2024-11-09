@@ -180,8 +180,8 @@ async def add_crop():
             fld_c_Yield, fld_c_WasStartedIndoors, fld_c_isActive
         )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """%queryData
-        cur.execute(query)
+        """
+        cur.execute(query, queryData)
         conn.commit()
         return "Crop added successfully", 200
     except Exception as e:
@@ -440,7 +440,7 @@ def updateCropType():
 
 
 #add a new crop type
-@app.route('/addCropType', methods=['POST'])
+@app.route('/Type', methods=['POST'])
 async def addCropType():
     params = request.get_json()
     subID = params.get('subID')
