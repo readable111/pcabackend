@@ -168,7 +168,7 @@ async def add_crop():
         # Corrected SQL query with a comma added after fld_c_HRFNumber
         query = """
         INSERT INTO tbl_crops (fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk, fld_c_HRFNumber,
-                               fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk, fld_c_HRFNumber,
+                               fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk,
                                fld_c_CropName, fld_c_Variety, fld_c_Source, fld_c_DatePlanted, fld_c_Comments,
                                fld_c_Yield, fld_c_WasStartedIndoors, fld_c_isActive)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -178,7 +178,7 @@ async def add_crop():
         cur.execute(query, (
             newCropID, subID, cropData["fld_c_ZipCode"], cropData["fld_c_State"],
             cropData["fld_f_FarmID_fk"], cropData['fld_c_HRFNumber'], cropData["fld_m_MediumID_fk"], cropData["fld_l_LocationID_fk"],
-            cropData["fld_ct_CropTypeID_fk"], cropData["fld_c_HRFNumber"],
+            cropData["fld_ct_CropTypeID_fk"],
             cropData["fld_c_CropName"], cropData["fld_c_Variety"], cropData["fld_c_Source"],
             cropData["fld_c_DatePlanted"], cropData["fld_c_Comments"], cropData["fld_c_Yield"],
             cropData["fld_c_WasStartedIndoors"], cropData["fld_c_isActive"]
