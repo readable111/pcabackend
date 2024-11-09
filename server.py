@@ -162,7 +162,8 @@ async def add_crop():
     cropData = data.get('cropData')
     newCropID = await getID()
     await print(f"{newCropID}")
-    
+    await print(f"{cropData}")
+
     try:
         cur = conn.cursor()
 
