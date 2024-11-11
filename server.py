@@ -124,7 +124,7 @@ def updateSubscriberInfo():
 def getCrops(subID):
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (subID))
+        cur.execute("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = %s", (subID,))
         results = cur.fetchall()
         if results:
             return jsonify(results), 200
