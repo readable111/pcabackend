@@ -140,7 +140,7 @@ def getCrops(subID):
 def getCropsverbose(subID):
     try:
         cur = conn.cursor()
-        query = """SELECT c.*, m.fld_m_MediumType, l.fld_l_LocatonName, f.fld_f_FarmName, ct.fld_ct_CropTypeName FROM tbl_crops AS c 
+        query = """SELECT DISTINCT c.*, m.fld_m_MediumType, l.fld_l_LocatonName, f.fld_f_FarmName, ct.fld_ct_CropTypeName FROM tbl_crops AS c 
         INNER JOIN tbl_media AS m ON c.fld_m_MediumID_fk = m.fld_m_MediumID_pk
         INNER JOIN tbl_locations AS l ON  c.fld_l_LocationID_fk = l.fld_l_LocationID_pk
         INNER JOIN tbl_farms AS f ON   c.fld_f_FarmID_fk = f.fld_f_FarmID_pk
