@@ -145,7 +145,7 @@ def getCropsverbose(subID):
         JOIN tbl_locations AS l ON  c.fld_l_LocationID_fk = l.fld_l_LocationID_pk AND c.fld_s_SubscriberID_pk = l.fld_s_SubscriberID_pk
         JOIN tbl_farms AS f ON   c.fld_f_FarmID_fk = f.fld_f_FarmID_pk AND c.fld_s_SubscriberID_pk = f.fld_s_SubscriberID_pk
         JOIN tbl_croptypes as ct ON c.fld_ct_CropTypeID_fk = ct.fld_ct_CropTypeID_pk AND c.fld_s_SubscriberID_pk = ct.fld_s_SubscriberID_pk
-         WHERE c.fld_s_SubscriberID_pk = %s FOR JSON PATH; 
+         WHERE c.fld_s_SubscriberID_pk = %s; 
                 """
         cur.execute(query,(subID,))
         results = cur.fetchall()
