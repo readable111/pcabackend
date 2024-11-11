@@ -171,7 +171,7 @@ async def add_crop():
             cropData['fld_c_Comments'], cropData['fld_c_Yield'], cropData['fld_c_WasStartedIndoors'],
             cropData['fld_c_isActive']
         )
-
+        print(f"Query Data: {queryData}")
         query = """
         INSERT INTO tbl_crops (
             fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk,
