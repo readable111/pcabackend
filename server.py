@@ -163,17 +163,17 @@ async def add_crop():
     newCropID = await getID()
     try:
         cur = conn.cursor()
-        queryData = tuple(
+        queryData = (
             newCropID, subID, cropData['fld_c_ZipCode'], cropData['fld_c_State'],
             cropData['fld_f_FarmID_fk'], cropData['fld_c_HRFNumber'], cropData['fld_m_MediumID_fk'],
             cropData['fld_l_LocationID_fk'], cropData['fld_ct_CropTypeID_fk'], cropData['fld_c_CropName'],
             cropData['fld_c_Variety'], cropData['fld_c_Source'], cropData['fld_c_DatePlanted'],
             cropData['fld_c_Comments'], cropData['fld_c_Yield'], cropData['fld_c_WasStartedIndoors'],
-            cropData['fld_c_isActive'],
+            cropData['fld_c_isActive']
         )
-        # Removed the duplicate fld_c_HRFNumber field
+
         query = """
-         INSERT INTO tbl_crops (
+        INSERT INTO tbl_crops (
             fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk,
             fld_c_HRFNumber, fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk,
             fld_c_CropName, fld_c_Variety, fld_c_Source, fld_c_DatePlanted, fld_c_Comments,
@@ -198,10 +198,12 @@ def updateCropInfo():
     try:
         cur = conn.cursor()
         query = """
-        UPDATE tbl_crops SET  fld_m_MediumID_fk, fld_f_FarmID_fk =%s, fld_ct_CropTypeID_fk=%s, fld_CropImg=%s, fld_c_CropName=%s, fld_c_Variety=%s,
-        fld_c_Source=%s, fld_c_DatePlanted=%s, fld_c_Comments=%s,
-        fld_c_Yield=%s, fld_c_IsActive=%s, fld_c_WasStartedIndoors=%s WHERE fld_s_SubscriberID_pk = %s
-        """ 
+        UPDATE tbl_crops
+        SET fld_m_MediumID_fk = %s, fld_f_FarmID_fk = %s, fld_ct_CropTypeID_fk = %s, fld_CropImg = %s, 
+            fld_c_CropName = %s, fld_c_Variety = %s, fld_c_Source = %s, fld_c_DatePlanted = %s, 
+            fld_c_Comments = %s, fld_c_Yield = %s, fld_c_IsActive = %s, fld_c_WasStartedIndoors = %s
+        WHERE fld_s_SubscriberID_pk = %s
+        """
         cur.execute(query, ( cropUpdate['fld_m_MediumId_fk'], cropUpdate['fld_f_FarmID_fk'], cropUpdate['fld_ct_CropTypeID_fk'], cropUpdate['fld_CropImg'],
                     cropUpdate['fld_c_CropName'], cropUpdate['fld_c_Variety'], cropUpdate['fld_c_Source'], cropUpdate['fld_c_DatePlanted'], cropUpdate['fld_c_Comments'],
                     cropUpdate['fld_c_Yield'], cropUpdate['fld_c_IsActive'], cropUpdate['fld_sc_WasStartedIndoors'], subID))
@@ -596,7 +598,7 @@ def getCropLocation(subID, cropID):
     try:
         cur = conn.cursor()
         query = """
-        SELECT l.* FROM tbl_locations AS l INNER JOIN tbl_crops AS C ON l.fld_s_SubscriberID_pk = c.fld_s_SubscriberID_pk AND  l.fld_m_LocationID_pk = c.fld_m_LocationID_fk WHERE c.fld_s_SubscriberID_pk = %s AND c.fld_c_CropID_pk = %s;
+        SELECT l.* FROM tbl_locations AS l INNER JOIN tbl_crops AS C ON l.fld_s_SubscriberID_pk = c.fld_s_SubscriberID_pk AND  l.fld_l_LocationID_pk = c.fld_l_LocationID_fk WHERE c.fld_s_SubscriberID_pk = %s AND c.fld_c_CropID_pk = %s;
         """
         cur.execute(query, (subID, cropID))
         results = cur.fetchone()
