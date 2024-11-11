@@ -137,7 +137,7 @@ def getCrops(subID):
         cur.close()
 
 @app.route('/getCropsVerbose/<string:subID>', methods=['GET'])
-def getCrops(subID):
+def getCropsverbose(subID):
     try:
         cur = conn.cursor()
         query = """SELECT c.*, m.fld_m_MediumType, l.fld_l_LocatonName, f.fld_f_FarmName, ct.fld_ct_CropTypeName FROM tbl_crops AS c 
