@@ -65,10 +65,11 @@ class TestApp(unittest.TestCase):
             "fld_c_HRFNumber": 1234,
             "fld_l_LocationID_fk": 1,
             "fld_ct_CropTypeID_fk": 1,
+            "fld_m_MediumID_fk": 1,
             "fld_c_CropName": "Test Crop",
             "fld_c_Variety": "Test Variety",
             "fld_c_Source": "Test Source",
-            "fld_c_DatePlanted": "2024-10-10",
+            "fld_c_DatePlanted": datetime.now().isoformat(),
             "fld_c_Comments": "Test comments",
             "fld_c_Yield": "Good",  # Set fld_c_Yield to a valid string value
             "fld_c_WasStartedIndoors": 0b0,
@@ -131,6 +132,27 @@ class TestApp(unittest.TestCase):
         })
         self.assertIn(response.status_code, [200, 500])
 
+    def test_get_crop_location_success(self):
+        subID = "sub123"  # Replace with a valid subID in your database
+        cropID = 1        # Replace with a valid cropID in your database
+
+        response = requests.get(f"{BASE_URL}/getCropLocation/{subID}/{cropID}")
+
+        # Check if the response status code is 200
+        self.assertEqual(response.status_code, 200)
+        
+        # Check if the response content is a JSON object (dict
+
+    def test_get_crop_medium_success(self):
+        subID = "sub123"  # Replace with a valid subID in your database
+        cropID = 1        # Replace with a valid cropID in your database
+
+        response = requests.get(f"{BASE_URL}/getCropMedium/{subID}/{cropID}")
+
+        # Check if the response status code is 200
+        self.assertEqual(response.status_code, 200)
+
+
     def test_addCropType(self):
         response = self.client.post(f"{BASE_URL}/addCropType", json={
             "subID": "sub12345",
@@ -171,8 +193,6 @@ class TestApp(unittest.TestCase):
 
     def test_add_farmer(self):
         payload = {
-            "subID": "sub123",
-            "farmID": 1,
             "subID": "sub123",
             "farmID": 1,
             "farmerName": "John Doe"
@@ -229,37 +249,7 @@ class TestApp(unittest.TestCase):
         # Check if the response status code is 200, indicating success
         self.assertEqual(response.status_code, 200)
 
-    def test_add_crop_success(self):
-        # Define a sample payload with all required fields
-        payload = {
-            "subID": "sub123",
-            "cropData": {
-                "fld_c_ZipCode": "12345",
-                "fld_c_State": "TX",
-                "fld_f_FarmID_fk": 1,
-                "fld_c_HRFNumber": "HRF123",
-                "fld_m_MediumID_fk": 2,
-                "fld_l_LocationID_fk": 3,
-                "fld_ct_CropTypeID_fk": 1,
-                "fld_c_CropName": "Test Crop",
-                "fld_c_Variety": "Test Variety",
-                "fld_c_Source": "Test Source",
-                "fld_c_DatePlanted": datetime.now().isoformat(),
-                "fld_c_Comments": "Test comments",
-                "fld_c_Yield": "yadyayda",
-                "fld_c_WasStartedIndoors": 0,
-                "fld_c_isActive": 0
-            }
-        }
-
-        # Send POST request to the /addcrop endpoint
-        response = requests.post(f"{BASE_URL}/addcrop", json=payload)
-
-        # Check if the response status code is 200, indicating success
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.text, "Crop added successfully")
-
-
+    
     def test_list_task_types(self):
         subID = "sub123"
         response = requests.get(f"{BASE_URL}/listTaskTypes/{subID}")

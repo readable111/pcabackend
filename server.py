@@ -135,6 +135,30 @@ def getCrops(subID):
         return "Error retrieving data", 500
     finally:
         cur.close()
+
+@app.route('/getCropsVerbose/<string:subID>', methods=['GET'])
+def getCrops(subID):
+    try:
+        cur = conn.cursor()
+        query = """SELECT c.* m.fld_MediumType, l.fld_l_LocationName, f.fld_f_FarmName, ct.fld_ct_CropTypeName FROM tbl_crops AS c 
+        INNER JOIN tbl_media AS m ON c.fld_m_MediumID_fk = m.fld_medium
+        INNER JOIN tbl_locations AS l ON  c.fld_l_LocationID_fk = l.fld_l_LocationsID_pk
+        INNER JOIN tbl_farms AS f ON   c.fld_f_FarmID_fk = f.fld_f_FarmID_pk
+        INNER JOIN tbl_croptypes as ct ON c.fld_ct_CropTypeID_fk = ct.ld_ct_CropTypeID_pk
+        WHERE c.fld_s_SubscriberID_pk = %s"
+                """
+        cur.execute(query,(subID,))
+        results = cur.fetchall()
+        if results:
+            return jsonify(results), 200
+        else:
+            return "Entity not found", 404
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error retrieving data", 500
+    finally:
+        cur.close()
+
  
 
 #Get list of Subscriber crops
