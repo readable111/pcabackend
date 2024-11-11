@@ -204,7 +204,7 @@ def updateCropInfo():
             fld_c_Comments = %s, fld_c_Yield = %s, fld_c_IsActive = %s, fld_c_WasStartedIndoors = %s
         WHERE fld_s_SubscriberID_pk = %s
         """
-        cur.execute(query, ( cropUpdate['fld_m_MediumId_fk'], cropUpdate['fld_f_FarmID_fk'], cropUpdate['fld_ct_CropTypeID_fk'], cropUpdate['fld_CropImg'],
+        cur.execute(query, ( cropUpdate['fld_m_MediumID_fk'], cropUpdate['fld_f_FarmID_fk'], cropUpdate['fld_ct_CropTypeID_fk'], cropUpdate['fld_CropImg'],
                     cropUpdate['fld_c_CropName'], cropUpdate['fld_c_Variety'], cropUpdate['fld_c_Source'], cropUpdate['fld_c_DatePlanted'], cropUpdate['fld_c_Comments'],
                     cropUpdate['fld_c_Yield'], cropUpdate['fld_c_IsActive'], cropUpdate['fld_sc_WasStartedIndoors'], subID))
         conn.commit()
