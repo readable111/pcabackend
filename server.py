@@ -286,7 +286,7 @@ def listTasks(subID):
         cur = conn.cursor()
         query = """SELECT t.*,  tt.fld_tt_TaskTypeName FROM tbl_tasks AS t
         JOIN tbl_taskTypes AS tt ON t.fld_s_SubscriberID_pk = tt.fld_s_SubscriberID_pk AND t.fld_t_TaskTypeID_fk = tt.fld_tt_TaskTypeID_pk
-        WHERE fld_s_SubscriberID_pk = %s;"""
+        WHERE t.fld_s_SubscriberID_pk = %s;"""
         cur.execute(query, (subID,))
         results = cur.fetchall()
         return jsonify(results), 200
