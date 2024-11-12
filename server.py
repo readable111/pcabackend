@@ -437,10 +437,10 @@ def listFarmers(subID):
         cur = conn.cursor()
         cur.execute("SELECT * FROM tbl_farmers WHERE  fld_s_SubscriberID_pk = %s", (subID,))
         results = cur.fetchall()
-        return jsonify(results)
+        return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
-        return "Error connecting to database"
+        return "Error connecting to database", 500
     finally:
         cur.close()
 
@@ -775,7 +775,7 @@ def listLocations(subID):
         return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
-        return "Error Getting Locations"
+        return "Error Getting Locations", 500
     finally:
         cur.close()
 
