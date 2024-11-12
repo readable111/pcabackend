@@ -280,11 +280,11 @@ def connect():
 
 
 #Route for listing tasks by farmer    
-@app.route('/listTasks/<string:subID>/<int:farmerID>', methods=['GET'])
-def listTasks(subID, farmerID):
+@app.route('/listTasks/<string:subID>', methods=['GET'])
+def listTasks(subID):
     try:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM tbl_tasks WHERE fld_s_SubscriberID_pk = %s AND fld_fs_FarmerID_fk = %s", (subID, farmerID))
+        cur.execute("SELECT * FROM tbl_tasks WHERE fld_s_SubscriberID_pk = %s;", (subID,))
         results = cur.fetchall()
         return jsonify(results), 200
     except Exception as e:
