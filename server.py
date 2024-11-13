@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import mysql.connector
 import random
 import os
-import datetime
+from datetime import datetime
 import asyncio
 
 '''TO DO LIST:
