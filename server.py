@@ -785,10 +785,11 @@ async def addLocation():
         cur.execute(query,(locationID, farmID, subID, locationName, locationType))
         conn.commit()
         return "New Locarion Added Successfully", 200
-    except mysql.Error.IntegrityError as err:
-        if "Duplicate entry" in str(err):
-            print(f"Primary Key conflict ... Attempting with new key")
-            return addLocation()       
+   # except mysql.Error.IntegrityError as err:
+    #    if "Duplicate entry" in str(err):
+     #       print(f"Primary Key conflict ... Attempting with new key")
+      #:w
+      #       return addLocation()       
     except Exception as e:
         print(f"Error: {e}")
         return "Error Executing endpoint", 500
