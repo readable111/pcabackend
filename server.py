@@ -149,10 +149,7 @@ def getCropsverbose(subID):
                 """
         cur.execute(query,(subID,))
         results = cur.fetchall()
-        if results:
-            return jsonify(results), 200
-        else:
-            return "Entity not found", 404
+        return jsonify(results), 200
     except Exception as e:
         print(f"Error: {e}")
         return "Error retrieving data", 500
