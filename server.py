@@ -300,8 +300,10 @@ def listTasks(subID):
 def listTasksVerbose(subID):
     try:
         cur = conn.cursor()
-        query = """SELECT t.*,  tt.fld_tt_TaskTypeName FROM tbl_tasks AS t
+        query = """SELECT t.*,  tt.fld_tt_TaskTypeName, fs.fld_fs_FarmerFullName, l.fld_l_LocatonName FROM tbl_tasks AS t
         JOIN tbl_taskTypes AS tt ON t.fld_s_SubscriberID_pk = tt.fld_s_SubscriberID_pk AND t.fld_tt_TaskTypeID_fk = tt.fld_tt_TaskTypeID_pk
+        JOIN tbl_farmers AS fs ON t.fld_fs_FarmerID_fk = fs.fld_fs_FarmerID_pk AND t.fld_s_SubscriberID_pk = fs.fld_s_SubscriberID_pk
+        JOIN tbl_locations AS l ON t.fld_l_LocationID_fk - l.fld_l_LocationID_pk AND t.fld_s_SubscriberID_pk = l.fld_s_SubscriberID_pk
         WHERE t.fld_s_SubscriberID_pk = %s;"""
         cur.execute(query, (subID,))
         results = cur.fetchall()
