@@ -393,6 +393,7 @@ async def addTask():
         conn.commit()
         return "New Task Created", 200
     except mysql.Error.IntegrityError as err:
+        print(f"Error: {err}")
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
             return addTask()
