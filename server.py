@@ -312,7 +312,7 @@ def listTasksVerbose(subID):
     finally:
         cur.close()
 
-@app.route('/listCropTypes/<string:subID>', methods=['POST'])
+@app.route('/listCropTypes/<string:subID>', methods=['GET'])
 def listCropTypes(subID):
     try:
         cur = conn.cursor()
