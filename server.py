@@ -254,7 +254,7 @@ def deleteCrop():
         return "Crop Deleted successfully", 200
     except Exception as e:
         print(f"Error:{e}")
-        return "Error Deleting Crop"
+        return "Error Deleting Crop", 500
     finally:
         cur.close()
         
