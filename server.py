@@ -312,6 +312,21 @@ def listTasksVerbose(subID):
     finally:
         cur.close()
 
+@app.route('/listCropTypes/<string:subID>', methods=['POST'])
+def listCropTypes(subID):
+    try:
+        cur = conn.cursor()
+        query = """
+        SELECT * FROM tbl_cropTypes WHERE fld_s_SubscriberID_pk = %s;
+        """
+        cur.execute(query, (subID,))
+        results = cur.fetchall()
+        return jsonify(results), 200
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        cur.close()
+
 @app.route('/deleteTask', methods=['POST'])
 def deleteTask():
     params = request.get_json()
