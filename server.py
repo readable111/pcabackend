@@ -296,6 +296,22 @@ def listTasks(subID):
     finally:
         cur.close()
 
+@app.route('/listTasksVerbose/<string:subID>', methods=['GET'])
+def listTasksVerbose(subID):
+    try:
+        cur = conn.cursor()
+        query = """SELECT t.*,  tt.fld_tt_TaskTypeName FROM tbl_tasks AS t
+        JOIN tbl_taskTypes AS tt ON t.fld_s_SubscriberID_pk = tt.fld_s_SubscriberID_pk AND t.fld_tt_TaskTypeID_fk = tt.fld_tt_TaskTypeID_pk
+        WHERE t.fld_s_SubscriberID_pk = %s;"""
+        cur.execute(query, (subID,))
+        results = cur.fetchall()
+        return jsonify(results), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error connecting to database", 500
+    finally:
+        cur.close()
+
 @app.route('/deleteTask', methods=['POST'])
 def deleteTask():
     params = request.get_json()
@@ -589,7 +605,7 @@ def getMediums(subID):
         query = """
         SELECT * FROM tbl_mediums WHERE fld_s_SubscriberID_pk = %s;
         """
-        cur.exeute(query, (subID,))
+        cur.execute(query, (subID,))
         results = cur.fetchall()
         return jsonify(results), 200
     except Exception as e:
