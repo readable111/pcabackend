@@ -618,7 +618,7 @@ def getMediums(subID):
     try:
         cur = conn.cursor()
         query = """
-        SELECT * FROM tbl_mediums WHERE fld_s_SubscriberID_pk = %s;
+        SELECT * FROM tbl_media WHERE fld_s_SubscriberID_pk = %s;
         """
         cur.execute(query, (subID,))
         results = cur.fetchall()
