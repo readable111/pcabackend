@@ -783,7 +783,7 @@ async def addLocation():
         """
         cur.execute(query,(locationID, farmID, subID, locationName))
         conn.commit()
-        return "New Locarion Added Successfully", 500
+        return "New Locarion Added Successfully", 200
     except mysql.Error.IntegrityError as err:
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
