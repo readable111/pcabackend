@@ -368,7 +368,7 @@ def editTask():
         return "Task edited succesfully", 200 
     except Exception as e:
         print(f"Error:{e}")
-        return "Error: error connecting to database"
+        return "Error: error connecting to database", 500
     finally:
         cur.close()
 
