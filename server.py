@@ -242,8 +242,8 @@ def updateCropInfo():
 @app.route('/deleteCrop',methods=['POST'])
 def deleteCrop():
     params = request.get_json()
-    subID = request.get('subID')
-    cropID = request.get('cropID')
+    subID = params.get('subID')
+    cropID = params.get('cropID')
     try:
         cur = conn.cursor()
         query = """
