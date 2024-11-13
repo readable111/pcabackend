@@ -968,6 +968,7 @@ async def addJournalEntry():
         conn.commit()
         return "New Journal entered successfully", 200
     except mysql.Error.IntegrityError as err:
+        print(f"Error: {err}")
         if "Duplicate entry" in str(err):
             print(f"Primary Key conflict ... Attempting with new key")
             return addJournalEntry()
