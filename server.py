@@ -774,14 +774,15 @@ async def addLocation():
     params = request.get_json()
     subID = params.get('subID')
     farmID = params.get('farmID')
+    locationType = "location"
     locationID = await getID()
     locationName = params.get('locationName')
     try:
         cur = conn.cursor()
         query = """
-        INSERT INTO tbl_locations (fld_l_LocationID_pk, fld_f_FarmID_fk, fld_s_SubscriberID_pk, fld_l_LocationName) VALUES(%s,%s,%s,%s)
+        INSERT INTO tbl_locations (fld_l_LocationID_pk, fld_f_FarmID_fk, fld_s_SubscriberID_pk, fld_l_LocatonName, fld_l_LocationType) VALUES(%s,%s,%s,%s,%s)
         """
-        cur.execute(query,(locationID, farmID, subID, locationName))
+        cur.execute(query,(locationID, farmID, subID, locationName, locationType))
         conn.commit()
         return "New Locarion Added Successfully", 200
     except mysql.Error.IntegrityError as err:
