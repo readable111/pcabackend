@@ -104,11 +104,11 @@ def updateSubscriberInfo():
     try:
         cur = conn.cursor()
         query = """
-        UPDATE tbl_subscribers  SET fld_s_FirstName=%s, fld_s_LastName=%s, fld_s_ProfilePicture=%s, fld_s_EmailAddr=%s,
+        UPDATE tbl_subscribers  SET fld_s_FirstName=%s, fld_s_LastName=%s, fld_s_EmailAddr=%s,
         fld_s_StreetAddr=%s, fld_s_City=%s, fld_s_PostalCode=%s, fld_s_PhoneNum=%s, fld_s_HasAmbientWeather=%s,
         fld_s_AmbientWeatherKey=%s WHERE fld_s_SubscriberID_pk = %s
         """ 
-        cur.execute(query, (newSubInfo['fld_s_FirstName'], newSubInfo['fld_s_LastName'], newSubInfo['fld_s_ProfilePicture'],
+        cur.execute(query, (newSubInfo['fld_s_FirstName'], newSubInfo['fld_s_LastName'],
                     newSubInfo['fld_s_EmailAddr'], newSubInfo['fld_s_StreetAddr'], newSubInfo['fld_s_City'], newSubInfo['fld_s_PostalCode'],
                     newSubInfo['fld_s_PhoneNum'], newSubInfo['fld_s_HasAmbientWeather'], newSubInfo['fld_s_AmbientWeatherKey'], subID))
         conn.commit()
