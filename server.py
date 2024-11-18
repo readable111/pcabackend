@@ -917,7 +917,7 @@ def deleteJournalEntry():
     try:
         cur = conn.cursor()
         query = """
-        DELETE FROM tbl_journalentries WHER fld_s_SubscriberID_pk = %s AND fld_j_EntryID_pk = %s;
+        DELETE FROM tbl_journalentries WHERE fld_s_SubscriberID_pk = %s AND fld_j_EntryID_pk = %s;
         """
         cur.execute(query, (subID, entryID))
         conn.commit()
